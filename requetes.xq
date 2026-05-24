@@ -1,16 +1,10 @@
-(: ════════════════════════════════════════════════════════════
-   fichier  : requetes.xq
-   base XML : club.xml  (chargé dans BaseX sous le nom "club")
-   usage    : ouvrir dans BaseX GUI > New Query > Run (F5)
-              OU : basex -i club.xml requetes.xq
-   ════════════════════════════════════════════════════════════ :)
 
+<resultats>{
 
 (: ─────────────────────────────────────────────────────────────
    Q1 — Liste complète des membres
-   Affiche : id, nom complet, email, libellé de catégorie
    ───────────────────────────────────────────────────────────── :)
-(: Q1 :)
+<Q1>
 <membres>{
   (: Parcourir tous les membres :)
   for $m in //membre
@@ -23,13 +17,13 @@
       <categorie>{$cat/@libelle/string()}</categorie>
     </membre>
 }</membres>
+</Q1>,
 
 
 (: ─────────────────────────────────────────────────────────────
    Q2 — Liste des concours triés par date croissante
-   Affiche : titre, date, coefficient, libellé de catégorie
    ───────────────────────────────────────────────────────────── :)
-(: Q2 :)
+<Q2>
 <concours>{
   (: Parcourir les concours et trier par date :)
   for $c in //concours[@id]
@@ -43,15 +37,13 @@
       <categorie>{$cat/@libelle/string()}</categorie>
     </concours>
 }</concours>
+</Q2>,
 
 
 (: ─────────────────────────────────────────────────────────────
    Q3 — Calcul du score de chaque participant
-   Formule : score = (complexite + tempsExecution) × coefficient
-   Affiche : titre du concours, nom participant, complexite,
-             tempsExecution, score arrondi à 2 décimales
    ───────────────────────────────────────────────────────────── :)
-(: Q3 :)
+<Q3>
 <resultats>{
   (: Parcourir chaque concours :)
   for $c in //concours[@id]
@@ -75,13 +67,13 @@
         </participant>
     }</concours>
 }</resultats>
+</Q3>,
 
 
 (: ─────────────────────────────────────────────────────────────
    Q4 — Vainqueur de chaque concours
-   En cas d'égalité : tous les ex-aequo sont affichés
    ───────────────────────────────────────────────────────────── :)
-(: Q4 :)
+<Q4>
 <vainqueurs>{
   for $c in //concours[@id]
   let $coef := xs:decimal($c/@coefficient)
@@ -108,13 +100,13 @@
         </vainqueur>
     }</concours>
 }</vainqueurs>
+</Q4>,
 
 
 (: ─────────────────────────────────────────────────────────────
    Q5 — Membres d'une catégorie (triés alphabétiquement)
-   Paramètre : changer la valeur de $categorie
    ───────────────────────────────────────────────────────────── :)
-(: Q5 :)
+<Q5>{
 let $categorie := "Intelligence Artificielle"
 (: Trouver l'id de la catégorie demandée :)
 let $idCat := //categorie[@libelle = $categorie]/@id/string()
@@ -129,3 +121,6 @@ return
       <email>{$m/email/text()}</email>
     </membre>
 }</membres>
+}</Q5>
+
+}</resultats>
